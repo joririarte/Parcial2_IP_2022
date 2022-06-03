@@ -1,3 +1,4 @@
+//Counter en consola, juego de dos jugadores.
 #include <iostream>
 #include <Windows.h>
 #include <ctime>
