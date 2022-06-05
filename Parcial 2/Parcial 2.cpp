@@ -133,25 +133,25 @@ void jugar(string bando) {
 		ClearScreen();
 		//Deteccion de teclas del teclado
 		if (_kbhit()) {
-			char direccion = _getch();//obteiene la tecla.
+			char direccion = _getch();//obtiene la tecla.
 			switch (toupper(direccion)) {//llama a la accion segun la tecla.
-				case 'W':
+				case 'W'://llama al movimiento del jugador
 				case 'A':
 				case 'S':
 				case 'D':
 					mover(jugador, direccion);
 					break;
-				case '8':
+				case '8'://llama a la movimiento del enemigo
 				case '5':
 				case '4':
 				case '6':
 					mover(enemigo, direccion);
 					break;
-				case 'C':
+				case 'C'://llama a disparar del jugador
 					disparar(jugador, bala, jugador.direccion);
 					addJugador(bala);
 					break;
-				case '0':
+				case '0'://llama disparar del enemigo
 					disparar(enemigo, bala1, enemigo.direccion);
 					addJugador(bala1);
 						break;
@@ -167,6 +167,9 @@ void jugar(string bando) {
 	//movimiento, tiros, ganador, todo sale de aca
 }
 void accion(APersonaje& personaje, APersonaje& proyectil) {
+	//mueve proyectiles
+	//llama a recibir daño para verificar si en el frame se recibe daño o no
+	//limpia el personaje que tenga vida menor estricto a 1 (0 o menos)
 	if (proyectil.creado)
 		mover(proyectil, proyectil.direccion);
 	if (proyectil.creado)
@@ -178,6 +181,9 @@ void accion(APersonaje& personaje, APersonaje& proyectil) {
 }
 void ClearScreen()
 {
+	//coloca el cursor de la consola en la posicion 0,0; arriba a la izquierda.
+	//sirve para "limpiar" la pantalla
+	//Elimina el flickering que hacia system("cls")
 	COORD cursorPosition;
 	cursorPosition.X = 0;
 	cursorPosition.Y = 0;
@@ -185,6 +191,7 @@ void ClearScreen()
 }
 void Respawn(APersonaje& personaje)
 {
+	//Respawnea el personaje si es que creado es false
 	if (!personaje.creado) {
 		reiniciarActor(personaje);
 		addJugador(personaje);
@@ -219,24 +226,25 @@ void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 	}
 }
 void addJugador(APersonaje& personaje) {
+	//añade un jugador al mapa
 	bool exito = false;
 	do {
-		if (personaje.bando != "bala") {
+		if (personaje.bando != "bala") {//asigna posiciones rnd solo si el jugador no es una bala
 			personaje.posX = rand() % 29;
 			personaje.posY = rand() % 21;
 		}
-		if (mapa[personaje.posY][personaje.posX] == ' ') {
+		if (mapa[personaje.posY][personaje.posX] == ' ') {//Coloca en el mapa solo si es un espacio vacio.
 			mapa[personaje.posY][personaje.posX] = personaje.repVisual;
 			exito = true;
 		}
-		else if (personaje.bando == "bala")
+		else if (personaje.bando == "bala")//si el personaje es una bala siempre sale del ciclo, la haya colocado o no.
 			exito = true;
-	} while (!exito);
+	} while (!exito);//repite el ciclo hasta que el personaje se pueda colocar en la pantalla.
 }
 void mover(APersonaje& personaje, char dir) {
 	//mueve el personaje jugable
 	//se llamaria desde jugar
-	int x = personaje.posX;
+	int x = personaje.posX;//toma las posiciones iniciales del personaje
 	int y = personaje.posY;
 	switch (dir) {
 	case 'W':
@@ -280,6 +288,8 @@ void mover(APersonaje& personaje, char dir) {
 		personaje.direccion = 'd';
 		break;
 	}
+	//si las posiciones del personaje no sufrieron cambios pasando por el switch quiere decir que no se movio
+	//por lo tanto está tocando una pared u otro personaje, entonces la bala se limpiará.
 	if (personaje.bando == "bala" && x == personaje.posX && y == personaje.posY) {
 		personaje.creado = false;
 		mapa[personaje.posY][personaje.posX] = ' ';
@@ -345,6 +355,7 @@ void mostrarMapa() {
 	}
 }
 void recibirDmg(APersonaje& personaje, APersonaje& proyectil) {
+	//recibe daño tiene problemas cuando la bala pasa por el costado, toma el daño igualmente.
 	if (personaje.posX == proyectil.posX)
 		if (personaje.posY == proyectil.posY - 1 || personaje.posY == proyectil.posY + 1)
 			personaje.vida--;
