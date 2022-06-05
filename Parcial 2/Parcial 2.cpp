@@ -158,7 +158,7 @@ void jugar(string bando) {
 		accion(jugador, bala1);
 		accion(enemigo, bala);
 		mostrarMapa();
-		cout << endl << "vida " << enemigo.bando << ": " << enemigo.vida << "vida " << jugador.bando << ": " << jugador.vida << endl;
+		cout << endl << "Vida " << enemigo.bando << ": " << enemigo.vida << " || Vida " << jugador.bando << ": " << jugador.vida << endl;
 		Sleep(100);
 	} while (true);
 	//maneja todo el juego
