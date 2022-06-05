@@ -28,6 +28,7 @@ void mostrarMapa();
 void recibirDmg(APersonaje& personaje, APersonaje& proyectil);
 void accion(APersonaje& personaje, APersonaje& proyectil);
 void ClearScreen();
+void Respawn(APersonaje& personaje);
 
 int main()
 {
@@ -125,10 +126,9 @@ void jugar(string bando) {
 	addJugador(enemigo);
 	char visual;
 	do {
-		if (!enemigo.creado) {
-			reiniciarActor(enemigo);
-			addJugador(enemigo);
-		}
+		//Respawnea al personaje que corresponda
+		Respawn(jugador);
+		Respawn(enemigo);
 		ClearScreen();
 		if (_kbhit()) {
 			char direccion = _getch();
@@ -181,6 +181,13 @@ void ClearScreen()
 	cursorPosition.X = 0;
 	cursorPosition.Y = 0;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+}
+void Respawn(APersonaje& personaje)
+{
+	if (!personaje.creado) {
+		reiniciarActor(personaje);
+		addJugador(personaje);
+	}
 }
 void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 	//Crea un proyectil en la direccion que mira el jugador
