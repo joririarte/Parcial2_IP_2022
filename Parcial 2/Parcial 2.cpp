@@ -27,6 +27,7 @@ void crearMapa();
 void mostrarMapa();
 void recibirDmg(APersonaje& personaje, APersonaje& proyectil);
 void accion(APersonaje& personaje, APersonaje& proyectil);
+void ClearScreen();
 
 int main()
 {
@@ -128,7 +129,7 @@ void jugar(string bando) {
 			reiniciarActor(enemigo);
 			addJugador(enemigo);
 		}
-		system("cls");
+		ClearScreen();
 		if (_kbhit()) {
 			char direccion = _getch();
 			if (toupper(direccion) == 'C') {
@@ -159,7 +160,7 @@ void jugar(string bando) {
 		accion(enemigo, bala);
 		mostrarMapa();
 		cout << endl << "Vida " << enemigo.bando << ": " << enemigo.vida << " || Vida " << jugador.bando << ": " << jugador.vida << endl;
-		Sleep(100);
+		Sleep(65);
 	} while (true);
 	//maneja todo el juego
 	//movimiento, tiros, ganador, todo sale de aca
@@ -173,6 +174,13 @@ void accion(APersonaje& personaje, APersonaje& proyectil) {
 		mapa[personaje.posY][personaje.posX] = ' ';
 		personaje.creado = false;
 	}
+}
+void ClearScreen()
+{
+	COORD cursorPosition;
+	cursorPosition.X = 0;
+	cursorPosition.Y = 0;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 	//Crea un proyectil en la direccion que mira el jugador
