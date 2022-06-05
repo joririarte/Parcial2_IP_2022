@@ -129,19 +129,12 @@ void jugar(string bando) {
 		//Respawnea al personaje que corresponda
 		Respawn(jugador);
 		Respawn(enemigo);
+		//Reinicia la pantalla
 		ClearScreen();
+		//Deteccion de teclas del teclado
 		if (_kbhit()) {
-			char direccion = _getch();
-			if (toupper(direccion) == 'C') {
-				disparar(jugador, bala, jugador.direccion);
-				addJugador(bala);
-			}
-			else if (toupper(direccion) == '0') {
-				disparar(enemigo, bala1, enemigo.direccion);
-				addJugador(bala1);
-			}
-			else
-				switch (toupper(direccion)) {
+			char direccion = _getch();//obteiene la tecla.
+			switch (toupper(direccion)) {//llama a la accion segun la tecla.
 				case 'W':
 				case 'A':
 				case 'S':
@@ -154,7 +147,15 @@ void jugar(string bando) {
 				case '6':
 					mover(enemigo, direccion);
 					break;
-				}
+				case 'C':
+					disparar(jugador, bala, jugador.direccion);
+					addJugador(bala);
+					break;
+				case '0':
+					disparar(enemigo, bala1, enemigo.direccion);
+					addJugador(bala1);
+						break;
+			}
 		}
 		accion(jugador, bala1);
 		accion(enemigo, bala);
