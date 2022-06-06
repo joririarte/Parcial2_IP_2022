@@ -40,15 +40,16 @@ int main()
 		int opciones;
 		cout << " ----> Counter en Consola <----\n\n";
 		cout << " Bienvenidos a Counter en Consola\n\n";
-		cout << " Menu:\n 1. Jugar\n 2. Instrucciones\n\n";
+		cout << " Menu:\n 1. Jugar\n 2. Instrucciones\n 3. Clasificaciones\n\n";
 		cout << " Opcion: ";
 		cin >> opciones;
-		if (opciones == 1) {
+		switch (opciones) {
+		case 1://Jugar
 			system("cls");
 			bando = elegirBando();
 			loop = false;
-		}
-		else if (opciones == 2) {
+			break;
+		case 2://instrucciones
 			system("cls");
 			cout << " ----> INSTRUCCIONES <----\n\n";
 			cout << " Este juego es un shooter de dos jugadores\n\n";
@@ -61,10 +62,17 @@ int main()
 			cout << " C: Disparar\n\n";
 			cout << " <---Volver al menu\n";
 			system("pause");
-		}
-		else {
+			break;
+		case 3://Clasificaciones
+			system("cls");
+			cout << " ----> CLASIFICACIONES <----\n\n";
+			cout << " <---Volver al menu\n";
+			system("pause");
+			break;
+		default:
 			cout << "\n\n OPCION INVALIDA ELIGE BIEN!\n\n";
 			system("pause");
+			break;
 		}
 	} while (loop);
 	jugar(bando);
