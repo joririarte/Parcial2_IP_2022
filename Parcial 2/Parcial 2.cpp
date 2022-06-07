@@ -97,8 +97,8 @@ int main()
 	} while (loop);
 	jugar(bando);
 	cout <<endl<< " Juego finalizado\n";
-	cout << "Puntaje de " << jugador.bando << ": " << jugador.puntaje;
-	cout << "Puntaje de " << enemigo.bando << ": " << enemigo.puntaje;
+	cout << "Puntaje de " << jugador.bando << ": " << jugador.puntaje<<endl;
+	cout << "Puntaje de " << enemigo.bando << ": " << enemigo.puntaje<<endl;
 	return 0;
 }
 
@@ -235,6 +235,7 @@ void Respawn(APersonaje& personaje)
 }
 void addClasificacion(string player, int puntaje)
 {
+
 }
 void mostrarClasificaciones()
 {
