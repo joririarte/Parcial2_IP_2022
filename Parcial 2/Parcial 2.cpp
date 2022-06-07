@@ -9,7 +9,7 @@ using namespace std;
 struct APersonaje {
 	string bando = " ";
 	char repVisual = ' ', direccion = ' ';
-	int posX = 0, posY = 0, vida, puntaje;
+	int posX = 0, posY = 0, vida, puntaje, muertes=0;
 	bool creado = false;
 };
 
@@ -38,6 +38,7 @@ void addClasificacion(string player, int puntaje);
 void mostrarClasificaciones();
 void OrdClasificaciones();
 void initPuntajes();
+void sumarPuntos(APersonaje& player, APersonaje& enemy);
 
 int main()
 {
@@ -95,6 +96,9 @@ int main()
 		}
 	} while (loop);
 	jugar(bando);
+	cout <<endl<< " Juego finalizado\n";
+	cout << "Puntaje de " << jugador.bando << ": " << jugador.puntaje;
+	cout << "Puntaje de " << enemigo.bando << ": " << enemigo.puntaje;
 	return 0;
 }
 
@@ -152,6 +156,7 @@ void jugar(string bando) {
 	addJugador(jugador);
 	addJugador(enemigo);
 	char visual;
+	bool inGame = true;
 	do {
 		//Respawnea al personaje que corresponda
 		Respawn(jugador);
@@ -186,10 +191,13 @@ void jugar(string bando) {
 		}
 		accion(jugador, bala1);
 		accion(enemigo, bala);
+		sumarPuntos(jugador, enemigo);
+		if (jugador.muertes >= 3 || enemigo.muertes >= 3)
+			inGame = false;
 		mostrarMapa();
 		cout << endl << "Vida " << enemigo.bando << ": " << enemigo.vida << " || Vida " << jugador.bando << ": " << jugador.vida << endl;
 		Sleep(65);
-	} while (true);
+	} while (inGame);
 	//maneja todo el juego
 	//movimiento, tiros, ganador, todo sale de aca
 }
@@ -204,6 +212,7 @@ void accion(APersonaje& personaje, APersonaje& proyectil) {
 	if (personaje.vida < 1) {
 		mapa[personaje.posY][personaje.posX] = ' ';
 		personaje.creado = false;
+		personaje.muertes++;
 	}
 }
 void ClearScreen()
@@ -256,7 +265,14 @@ void OrdClasificaciones()
 void initPuntajes()
 {
 	for (int i = 0; i < 10; i++)
-		puntajes[i] = rand() % 100 + 1;
+		puntajes[i] = rand() % 98 + 1;
+}
+void sumarPuntos(APersonaje& player, APersonaje& enemy)
+{
+	if (player.vida < 1 && enemy.vida > 1)
+		enemy.puntaje += 33;
+	if (player.vida > 1 && enemy.vida < 1)
+		player.puntaje += 33;
 }
 void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 	//Crea un proyectil en la direccion que mira el jugador
