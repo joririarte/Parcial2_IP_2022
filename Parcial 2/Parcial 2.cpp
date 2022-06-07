@@ -3,19 +3,24 @@
 #include <Windows.h>
 #include <ctime>
 #include <conio.h>
+#include <iomanip>
 
 using namespace std;
-const int filas = 21, columnas = 29;
-char mapa[filas][columnas];
-
 struct APersonaje {
 	string bando = " ";
 	char repVisual = ' ', direccion = ' ';
 	int posX = 0, posY = 0, vida, puntaje;
 	bool creado = false;
 };
+
+//Variables globales
+const int filas = 21, columnas = 29;
+char mapa[filas][columnas];
+int puntajes[10];
+string jugadores[10] = { "noobmaster69","xXToretoXx","ApuNahasapee","santi.godoy","elChidoxD","Pipita123","Messi2022","[ARG]Rambo87","vegeta777","elKun9" };
 APersonaje jugador, enemigo, bala, bala1;//actores
 
+//Funciones
 string elegirBando();
 void crearActor(APersonaje& pers, string bando, char visual);
 void reiniciarActor(APersonaje& pers);
@@ -29,10 +34,16 @@ void recibirDmg(APersonaje& personaje, APersonaje& proyectil);
 void accion(APersonaje& personaje, APersonaje& proyectil);
 void ClearScreen();
 void Respawn(APersonaje& personaje);
+void addClasificacion(string player, int puntaje);
+void mostrarClasificaciones();
+void OrdClasificaciones();
+void initPuntajes();
 
 int main()
 {
 	srand(time(NULL));
+	initPuntajes();
+	OrdClasificaciones();
 	bool loop = true;
 	string bando;
 	do {
@@ -73,6 +84,7 @@ int main()
 		case 3://Clasificaciones
 			system("cls");
 			cout << " ----> CLASIFICACIONES <----\n\n";
+			mostrarClasificaciones();
 			cout << " <---Volver al menu\n";
 			system("pause");
 			break;
@@ -211,6 +223,40 @@ void Respawn(APersonaje& personaje)
 		reiniciarActor(personaje);
 		addJugador(personaje);
 	}
+}
+void addClasificacion(string player, int puntaje)
+{
+}
+void mostrarClasificaciones()
+{
+	cout << setw(17) <<" Posicion |" << setw(17) << " Jugador |" << setw(17) << " Puntaje " << endl;
+	for (int i = 0; i < 10; i++)
+		cout << setw(15)<< i + 1 << " |" << setw(15) << jugadores[i] << " |"<< setw(15) << puntajes[i]<<endl;
+	cout << endl;
+}
+void OrdClasificaciones()
+{
+	int auxPts = 0;
+	string auxUser = "";
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 9; j++) {
+			if(puntajes[j]<puntajes[i]){
+				//ordenar puntajes
+				auxPts = puntajes[i];
+				puntajes[i] = puntajes[j];
+				puntajes[j] = auxPts;
+				//ordenar jugadores
+				auxUser = jugadores[i];
+				jugadores[i] = jugadores[j];
+				jugadores[j] = auxUser;
+			}
+		}
+	}
+}
+void initPuntajes()
+{
+	for (int i = 0; i < 10; i++)
+		puntajes[i] = rand() % 100 + 1;
 }
 void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 	//Crea un proyectil en la direccion que mira el jugador
