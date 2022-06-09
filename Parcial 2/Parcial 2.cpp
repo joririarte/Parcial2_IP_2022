@@ -7,7 +7,7 @@
 
 using namespace std;
 struct APersonaje {
-	string bando = " ";
+	string bando = " ", nombre="pichichu";
 	char repVisual = ' ', direccion = ' ';
 	int posX = 0, posY = 0, vida, puntaje, muertes=0;
 	bool creado = false;
@@ -34,7 +34,7 @@ void recibirDmg(APersonaje& personaje, APersonaje& proyectil);
 void accion(APersonaje& personaje, APersonaje& proyectil);
 void ClearScreen();
 void Respawn(APersonaje& personaje);
-void addClasificacion(string player, int puntaje);
+void addClasificacion(APersonaje player);
 void mostrarClasificaciones();
 void OrdClasificaciones();
 void initPuntajes();
@@ -99,6 +99,12 @@ int main()
 	cout <<endl<< " Juego finalizado\n";
 	cout << "Puntaje de " << jugador.bando << ": " << jugador.puntaje<<endl;
 	cout << "Puntaje de " << enemigo.bando << ": " << enemigo.puntaje<<endl;
+	addClasificacion(jugador);
+	system("cls");
+	cout << " ----> CLASIFICACIONES <----\n\n";
+	mostrarClasificaciones();
+	cout << " <---Volver al menu\n";
+	system("pause");
 	return 0;
 }
 
@@ -233,9 +239,27 @@ void Respawn(APersonaje& personaje)
 		addJugador(personaje);
 	}
 }
-void addClasificacion(string player, int puntaje)
+void addClasificacion(APersonaje player)
 {
-
+	bool aniadida = false;
+	int AuxPunt[10],auxPos;
+	string AuxNomb[10];
+	for (int i = 0; i < 10; i++){
+		if (aniadida) {
+			puntajes[i] = AuxPunt[i - auxPos];
+			jugadores[i] = AuxNomb[i - auxPos];
+		}
+		if (!aniadida && player.puntaje > puntajes[i]){
+				for (int j = 0; j < 10 - i; j++){
+					AuxPunt[j] = puntajes[i + j];
+					AuxNomb[j] = jugadores[i + j];
+				}
+			puntajes[i] = player.puntaje;
+			jugadores[i] = player.nombre;
+			aniadida = true;
+			auxPos = i+1;
+		}
+	}
 }
 void mostrarClasificaciones()
 {
@@ -266,14 +290,14 @@ void OrdClasificaciones()
 void initPuntajes()
 {
 	for (int i = 0; i < 10; i++)
-		puntajes[i] = rand() % 98 + 1;
+		puntajes[i] = rand() % 100 + 1;
 }
 void sumarPuntos(APersonaje& player, APersonaje& enemy)
 {
 	if (player.vida < 1 && enemy.vida > 1)
-		enemy.puntaje += 33;
+		enemy.puntaje += 17;
 	if (player.vida > 1 && enemy.vida < 1)
-		player.puntaje += 33;
+		player.puntaje += 17;
 }
 void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 	//Crea un proyectil en la direccion que mira el jugador
@@ -434,11 +458,18 @@ void mostrarMapa() {
 }
 void recibirDmg(APersonaje& personaje, APersonaje& proyectil) {
 	//recibe daño tiene problemas cuando la bala pasa por el costado, toma el daño igualmente.
-	if (personaje.posX == proyectil.posX)
-		if (personaje.posY == proyectil.posY - 1 || personaje.posY == proyectil.posY + 1)
-			personaje.vida--;
-	if (personaje.posY == proyectil.posY)
-		if (personaje.posX == proyectil.posX - 1 || personaje.posX == proyectil.posX + 1)
-			personaje.vida--;
-
+	switch (proyectil.direccion) {
+	case 'w':
+	case 's':
+		if (personaje.posX == proyectil.posX)
+			if (personaje.posY == proyectil.posY - 1 || personaje.posY == proyectil.posY + 1)
+				personaje.vida--;
+		break;
+	case 'a':
+	case 'd':
+		if (personaje.posY == proyectil.posY)
+			if (personaje.posX == proyectil.posX - 1 || personaje.posX == proyectil.posX + 1 && bala.direccion)
+				personaje.vida--;
+		break;
+	}
 }
