@@ -20,74 +20,84 @@ int puntajes[10];
 string jugadores[10] = { "noobmaster69","xXToretoXx","ApuNahasapee","santi.godoy","elChidoxD","Pipita123","Messi2022","[ARG]Rambo87","vegeta777","elKun9" };
 APersonaje jugador, enemigo, bala, bala1;//actores
 
-//Funciones
-string elegirBando();
-void crearActor(APersonaje& pers, string bando, char visual);
-void reiniciarActor(APersonaje& pers);
-void jugar(string bando);
-void disparar(APersonaje personaje, APersonaje& proyectil, char direccion);
-void addJugador(APersonaje& personaje);
-void mover(APersonaje& personaje, char dir);
+//Funciones: DEFINICIONES
+//Menús
+void MenuInicio();
+bool MenuPausa();
+void Instrucciones();
+
+//Inicializaciones
 void crearMapa();
-void mostrarMapa();
-void recibirDmg(APersonaje& personaje, APersonaje& proyectil);
-void accion(APersonaje& personaje, APersonaje& proyectil);
-void ClearScreen();
+void elegirBando();
+void crearActor(APersonaje& pers, string bando, char visual);
+void addJugador(APersonaje& personaje);
+void reiniciarActor(APersonaje& pers);
 void Respawn(APersonaje& personaje);
-void addClasificacion(APersonaje player);
+void initPuntajes();
+
+//Acciones
+void disparar(APersonaje personaje, APersonaje& proyectil, char direccion);
+void mover(APersonaje& personaje, char dir);
+void accion(APersonaje& personaje, APersonaje& proyectil);
+
+//Sistema
+void ClearScreen();
+void mostrarMapa();
 void mostrarClasificaciones();
 void OrdClasificaciones();
-void initPuntajes();
-void sumarPuntos(APersonaje& player, APersonaje& enemy);
+void addClasificacion(APersonaje player);
 
+//Modo de Juego
+void jugar();
+void sumarPuntos(APersonaje& player, APersonaje& enemy);
+void recibirDmg(APersonaje& personaje, APersonaje& proyectil);
+
+//Programa
 int main()
 {
 	srand(time(NULL));
 	initPuntajes();
 	OrdClasificaciones();
+
+	MenuInicio();
+	jugar();
+	addClasificacion(jugador);
+	mostrarClasificaciones();
+	return 0;
+}
+
+//Funciones: DECLARACIONES
+
+//Menús
+void MenuInicio()
+{
 	bool loop = true;
-	string bando;
 	do {
 		system("cls");
 		int opciones;
 		cout << " ----> Counter en Consola <----\n\n";
 		cout << " Bienvenidos a Counter en Consola\n\n";
-		cout << " Menu:\n 1. Jugar\n 2. Instrucciones\n 3. Clasificaciones\n\n";
+		cout << "Ingresa un numero de opcion.\n\n";
+		cout << " 1. Jugar\n";
+		cout << " 2. Instrucciones\n";
+		cout << " 3. Clasificaciones\n";
+		cout << " 4. Salir del juego\n\n";
 		cout << " Opcion: ";
 		cin >> opciones;
 		switch (opciones) {
 		case 1://Jugar
 			system("cls");
-			bando = elegirBando();
+			elegirBando();
 			loop = false;
 			break;
 		case 2://instrucciones
-			system("cls");
-			cout << " ----> INSTRUCCIONES <----\n\n";
-			cout << " Este juego es un shooter de dos jugadores\n\n";
-			cout << " Muevete por el campo, dispara a tu enemigo y esquiva sus balas\n\n";
-			cout << " CONTROLES:\n\n";
-			cout << " --> JUGADOR 1 <--\n\n";
-			cout << " W: mover arriba\n";
-			cout << " S: mover abajo\n";
-			cout << " A: mover izquierda\n";
-			cout << " D: mover derecha\n\n";
-			cout << " C: Disparar\n\n";
-			cout << " --> JUGADOR 2 <--\n\n";
-			cout << " 8: mover arriba\n";
-			cout << " 5: mover abajo\n";
-			cout << " 4: mover izquierda\n";
-			cout << " 6: mover derecha\n\n";
-			cout << " 0: Disparar\n\n";
-			cout << " <---Volver al menu\n";
-			system("pause");
+			Instrucciones();
 			break;
 		case 3://Clasificaciones
-			system("cls");
-			cout << " ----> CLASIFICACIONES <----\n\n";
 			mostrarClasificaciones();
-			cout << " <---Volver al menu\n";
-			system("pause");
+			break;
+		case 4:
+			exit(0);
 			break;
 		default:
 			cout << "\n\n OPCION INVALIDA ELIGE BIEN!\n\n";
@@ -95,20 +105,115 @@ int main()
 			break;
 		}
 	} while (loop);
-	jugar(bando);
-	cout <<endl<< " Juego finalizado\n";
-	cout << "Puntaje de " << jugador.bando << ": " << jugador.puntaje<<endl;
-	cout << "Puntaje de " << enemigo.bando << ": " << enemigo.puntaje<<endl;
-	addClasificacion(jugador);
+}
+bool MenuPausa()
+{
+	int opcion;
+	do {
+		system("cls");
+		cout << " ----> JUEGO EN PAUSA <----\n\n";
+		cout << " Ingresa un numero de opcion\n\n";
+		cout << " 1. Volver al Juego\n";
+		cout << " 2. Instrucciones\n";
+		cout << " 3. Clasificaciones\n";
+		cout << " 4. Salir del juego\n\n";
+		cout << " Opcion: ";
+		cin >> opcion;
+		switch (opcion)
+		{
+		case 1:
+			return true;
+			break;
+		case 2:
+			Instrucciones();
+			return true;
+			break;
+		case 3:
+			mostrarClasificaciones();
+			return true;
+			break;
+		case 4:
+			return false;
+			break;
+		}
+	} while (true);
+}
+void Instrucciones()
+{
 	system("cls");
-	cout << " ----> CLASIFICACIONES <----\n\n";
-	mostrarClasificaciones();
+	cout << " ----> INSTRUCCIONES <----\n\n";
+	cout << " Este juego es un shooter de dos jugadores\n\n";
+	cout << " Muevete por el campo, dispara a tu enemigo y esquiva sus balas\n\n";
+	cout << " CONTROLES:\n\n";
+	cout << " --> JUGADOR 1 <--\n\n";
+	cout << " W: mover arriba\n";
+	cout << " S: mover abajo\n";
+	cout << " A: mover izquierda\n";
+	cout << " D: mover derecha\n\n";
+	cout << " C: Disparar\n\n";
+	cout << " --> JUGADOR 2 <--\n\n";
+	cout << " 8: mover arriba\n";
+	cout << " 5: mover abajo\n";
+	cout << " 4: mover izquierda\n";
+	cout << " 6: mover derecha\n\n";
+	cout << " 0: Disparar\n\n";
 	cout << " <---Volver al menu\n";
 	system("pause");
-	return 0;
 }
 
-string elegirBando() {
+//Inicializaciones
+void crearMapa() {
+	//crea el mapa donde se va a jugar
+	//El mapa sera un arreglo bidimensional de caracteres.
+	//se llamaria desde jugar
+	for (int fil = 0; fil < filas; fil++) {
+		for (int col = 0; col < columnas; col++) {
+			if (fil == 0 || col == 0 || fil == filas - 1 || col == columnas - 1)
+				mapa[fil][col] = '#';
+			else if (fil == 1 && (col == 13 || col == 15 || col == 21 || col == 22))
+				mapa[fil][col] = '#';
+			else if (fil == 2 && (col == 5 || col == 8 || col > 12 && col < 16 || col == 21 || col == 22))
+				mapa[fil][col] = '#';
+			else if (fil == 3 && (col > 3 && col < 10 || col == 22 || col == 21 || col == 22))
+				mapa[fil][col] = '#';
+			else if (fil == 4 && (col == 4 || col > 5 && col < 8 || col == 9 || col == 10 || col == 21 || col == 22))
+				mapa[fil][col] = '#';
+			else if (fil == 5 && (col == 4 || col > 5 && col < 8 || col == 9 || col == 10))
+				mapa[fil][col] = '#';
+			else if (fil == 6 && (col > 3 && col < 10))
+				mapa[fil][col] = '#';
+			else if (fil == 7 && (col == 5 || col == 9 || col == 16 || col == 19 || col == 17 || col == 18))
+				mapa[fil][col] = '#';
+			else if (fil == 8 && (col == 6 || col == 7 || col > 15 && col < 20 || col == 24))
+				mapa[fil][col] = '#';
+			else if (fil == 9 && (col == 5 || col == 6 || col > 15 && col < 20 || col == 24))
+				mapa[fil][col] = '#';
+			else if (fil == 10 && (col == 4 || col == 6 || col > 15 && col < 20 || col == 24))
+				mapa[fil][col] = '#';
+			else if (fil == 11 && (col > 3 && col < 8 || col > 15 && col < 20 || col == 24))
+				mapa[fil][col] = '#';
+			else if (fil == 12 && (col == 4 || col == 6 || col == 12 || col == 24))
+				mapa[fil][col] = '#';
+			else if (fil == 13 && (col == 5 || col == 6 || col == 7 || col == 12 || col == 24))
+				mapa[fil][col] = '#';
+			else if (fil == 14 && (col == 6 || col == 12 || col == 20))
+				mapa[fil][col] = '#';
+			else if (fil == 15 && (col == 3 || col == 8 || col == 19 || col == 21 || col == 27 || col == 12))
+				mapa[fil][col] = '#';
+			else if (fil == 16 && (col == 3 || col == 7 || col == 8 || col == 9 || col > 11 && col < 16 || col == 19 || col > 24 && col < 28))
+				mapa[fil][col] = '#';
+			else if (fil == 17 && (col == 3 || col == 7 || col == 8 || col == 9 || col == 17 || col == 18 || col == 20 || col == 26 || col == 27))
+				mapa[fil][col] = '#';
+			else if (fil == 18 && (col == 8 || col == 17 || col == 19 || col == 27))
+				mapa[fil][col] = '#';
+
+			else
+				mapa[fil][col] = ' ';
+
+		}
+	}
+}
+void elegirBando() {
 	int opciones;
 	char confirmacion;
 	do {
@@ -125,7 +230,7 @@ string elegirBando() {
 			if (toupper(confirmacion) == 'Y') {
 				crearActor(jugador, "Counter", 'C');
 				crearActor(enemigo, "Terrorist", 'T');
-				return "Counter";
+				return;
 			}
 		}
 		else if (opciones == 2) {
@@ -136,7 +241,7 @@ string elegirBando() {
 			if (toupper(confirmacion) == 'Y') {
 				crearActor(enemigo, "Counter", 'C');
 				crearActor(jugador, "Terrorist", 'T');
-				return "Terrorist";
+				return;
 			}
 		}
 		else {
@@ -153,83 +258,25 @@ void crearActor(APersonaje& pers, string bando, char visual) {
 	pers.creado = true;
 	pers.vida = 3;
 }
+void addJugador(APersonaje& personaje) {
+	//añade un jugador al mapa
+	bool exito = false;
+	do {
+		if (personaje.bando != "bala") {//asigna posiciones rnd solo si el jugador no es una bala
+			personaje.posX = rand() % 29;
+			personaje.posY = rand() % 21;
+		}
+		if (mapa[personaje.posY][personaje.posX] == ' ') {//Coloca en el mapa solo si es un espacio vacio.
+			mapa[personaje.posY][personaje.posX] = personaje.repVisual;
+			exito = true;
+		}
+		else if (personaje.bando == "bala")//si el personaje es una bala siempre sale del ciclo, la haya colocado o no.
+			exito = true;
+	} while (!exito);//repite el ciclo hasta que el personaje se pueda colocar en la pantalla.
+}
 void reiniciarActor(APersonaje& pers) {
 	pers.creado = true;
 	pers.vida = 3;
-}
-void jugar(string bando) {
-	crearMapa();
-	addJugador(jugador);
-	addJugador(enemigo);
-	char visual;
-	bool inGame = true;
-	do {
-		//Respawnea al personaje que corresponda
-		Respawn(jugador);
-		Respawn(enemigo);
-		//Reinicia la pantalla
-		ClearScreen();
-		//Deteccion de teclas del teclado
-		if (_kbhit()) {
-			char direccion = _getch();//obtiene la tecla.
-			switch (toupper(direccion)) {//llama a la accion segun la tecla.
-				case 'W'://llama al movimiento del jugador
-				case 'A':
-				case 'S':
-				case 'D':
-					mover(jugador, direccion);
-					break;
-				case '8'://llama a la movimiento del enemigo
-				case '5':
-				case '4':
-				case '6':
-					mover(enemigo, direccion);
-					break;
-				case 'C'://llama a disparar del jugador
-					disparar(jugador, bala, jugador.direccion);
-					addJugador(bala);
-					break;
-				case '0'://llama disparar del enemigo
-					disparar(enemigo, bala1, enemigo.direccion);
-					addJugador(bala1);
-						break;
-			}
-		}
-		accion(jugador, bala1);
-		accion(enemigo, bala);
-		sumarPuntos(jugador, enemigo);
-		if (jugador.muertes >= 3 || enemigo.muertes >= 3)
-			inGame = false;
-		mostrarMapa();
-		cout << endl << "Vida " << enemigo.bando << ": " << enemigo.vida << " || Vida " << jugador.bando << ": " << jugador.vida << endl;
-		Sleep(65);
-	} while (inGame);
-	//maneja todo el juego
-	//movimiento, tiros, ganador, todo sale de aca
-}
-void accion(APersonaje& personaje, APersonaje& proyectil) {
-	//mueve proyectiles
-	//llama a recibir daño para verificar si en el frame se recibe daño o no
-	//limpia el personaje que tenga vida menor estricto a 1 (0 o menos)
-	if (proyectil.creado)
-		mover(proyectil, proyectil.direccion);
-	if (proyectil.creado)
-		recibirDmg(personaje, proyectil);
-	if (personaje.vida < 1) {
-		mapa[personaje.posY][personaje.posX] = ' ';
-		personaje.creado = false;
-		personaje.muertes++;
-	}
-}
-void ClearScreen()
-{
-	//coloca el cursor de la consola en la posicion 0,0; arriba a la izquierda.
-	//sirve para "limpiar" la pantalla
-	//Elimina el flickering que hacia system("cls")
-	COORD cursorPosition;
-	cursorPosition.X = 0;
-	cursorPosition.Y = 0;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 void Respawn(APersonaje& personaje)
 {
@@ -239,66 +286,13 @@ void Respawn(APersonaje& personaje)
 		addJugador(personaje);
 	}
 }
-void addClasificacion(APersonaje player)
-{
-	bool aniadida = false;
-	int AuxPunt[10],auxPos;
-	string AuxNomb[10];
-	for (int i = 0; i < 10; i++){
-		if (aniadida) {
-			puntajes[i] = AuxPunt[i - auxPos];
-			jugadores[i] = AuxNomb[i - auxPos];
-		}
-		if (!aniadida && player.puntaje > puntajes[i]){
-				for (int j = 0; j < 10 - i; j++){
-					AuxPunt[j] = puntajes[i + j];
-					AuxNomb[j] = jugadores[i + j];
-				}
-			puntajes[i] = player.puntaje;
-			jugadores[i] = player.nombre;
-			aniadida = true;
-			auxPos = i+1;
-		}
-	}
-}
-void mostrarClasificaciones()
-{
-	cout << setw(17) <<" Posicion |" << setw(17) << " Jugador |" << setw(17) << " Puntaje " << endl;
-	for (int i = 0; i < 10; i++)
-		cout << setw(15)<< i + 1 << " |" << setw(15) << jugadores[i] << " |"<< setw(15) << puntajes[i]<<endl;
-	cout << endl;
-}
-void OrdClasificaciones()
-{
-	int auxPts = 0;
-	string auxUser = "";
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 9; j++) {
-			if(puntajes[j]<puntajes[i]){
-				//ordenar puntajes
-				auxPts = puntajes[i];
-				puntajes[i] = puntajes[j];
-				puntajes[j] = auxPts;
-				//ordenar jugadores
-				auxUser = jugadores[i];
-				jugadores[i] = jugadores[j];
-				jugadores[j] = auxUser;
-			}
-		}
-	}
-}
 void initPuntajes()
 {
 	for (int i = 0; i < 10; i++)
 		puntajes[i] = rand() % 100 + 1;
 }
-void sumarPuntos(APersonaje& player, APersonaje& enemy)
-{
-	if (player.vida < 1 && enemy.vida > 1)
-		enemy.puntaje += 17;
-	if (player.vida > 1 && enemy.vida < 1)
-		player.puntaje += 17;
-}
+
+//Acciones
 void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 	//Crea un proyectil en la direccion que mira el jugador
 	//se llamaria desde jugar
@@ -326,22 +320,6 @@ void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 		proyectil.posY = personaje.posY;
 		break;
 	}
-}
-void addJugador(APersonaje& personaje) {
-	//añade un jugador al mapa
-	bool exito = false;
-	do {
-		if (personaje.bando != "bala") {//asigna posiciones rnd solo si el jugador no es una bala
-			personaje.posX = rand() % 29;
-			personaje.posY = rand() % 21;
-		}
-		if (mapa[personaje.posY][personaje.posX] == ' ') {//Coloca en el mapa solo si es un espacio vacio.
-			mapa[personaje.posY][personaje.posX] = personaje.repVisual;
-			exito = true;
-		}
-		else if (personaje.bando == "bala")//si el personaje es una bala siempre sale del ciclo, la haya colocado o no.
-			exito = true;
-	} while (!exito);//repite el ciclo hasta que el personaje se pueda colocar en la pantalla.
 }
 void mover(APersonaje& personaje, char dir) {
 	//mueve el personaje jugable
@@ -397,56 +375,31 @@ void mover(APersonaje& personaje, char dir) {
 		mapa[personaje.posY][personaje.posX] = ' ';
 	}
 }
-void crearMapa() {
-	//crea el mapa donde se va a jugar
-	//El mapa sera un arreglo bidimensional de caracteres.
-	//se llamaria desde jugar
-	for (int fil = 0; fil < filas; fil++) {
-		for (int col = 0; col < columnas; col++) {
-			if (fil == 0 || col == 0 || fil == filas - 1 || col == columnas - 1)
-				mapa[fil][col] = '#';
-			else if (fil == 1 && (col == 13 || col == 15 || col == 21 || col == 22))
-				mapa[fil][col] = '#';
-			else if (fil == 2 && (col == 5 || col == 8 || col > 12 && col < 16 || col == 21 || col == 22))
-				mapa[fil][col] = '#';
-			else if (fil == 3 && (col > 3 && col < 10 || col == 22 || col == 21 || col == 22))
-				mapa[fil][col] = '#';
-			else if (fil == 4 && (col == 4 || col > 5 && col < 8 || col == 9 || col == 10 || col == 21 || col == 22))
-				mapa[fil][col] = '#';
-			else if (fil == 5 && (col == 4 || col > 5 && col < 8 || col == 9 || col == 10))
-				mapa[fil][col] = '#';
-			else if (fil == 6 && (col > 3 && col < 10))
-				mapa[fil][col] = '#';
-			else if (fil == 7 && (col == 5 || col == 9 || col == 16 || col == 19 || col == 17 || col == 18))
-				mapa[fil][col] = '#';
-			else if (fil == 8 && (col == 6 || col == 7 || col > 15 && col < 20 || col == 24))
-				mapa[fil][col] = '#';
-			else if (fil == 9 && (col == 5 || col == 6 || col > 15 && col < 20 || col == 24))
-				mapa[fil][col] = '#';
-			else if (fil == 10 && (col == 4 || col == 6 || col > 15 && col < 20 || col == 24))
-				mapa[fil][col] = '#';
-			else if (fil == 11 && (col > 3 && col < 8 || col > 15 && col < 20 || col == 24))
-				mapa[fil][col] = '#';
-			else if (fil == 12 && (col == 4 || col == 6 || col == 12 || col == 24))
-				mapa[fil][col] = '#';
-			else if (fil == 13 && (col == 5 || col == 6 || col == 7 || col == 12 || col == 24))
-				mapa[fil][col] = '#';
-			else if (fil == 14 && (col == 6 || col == 12 || col == 20))
-				mapa[fil][col] = '#';
-			else if (fil == 15 && (col == 3 || col == 8 || col == 19 || col == 21 || col == 27 || col == 12))
-				mapa[fil][col] = '#';
-			else if (fil == 16 && (col == 3 || col == 7 || col == 8 || col == 9 || col > 11 && col < 16 || col == 19 || col > 24 && col < 28))
-				mapa[fil][col] = '#';
-			else if (fil == 17 && (col == 3 || col == 7 || col == 8 || col == 9 || col == 17 || col == 18 || col == 20 || col == 26 || col == 27))
-				mapa[fil][col] = '#';
-			else if (fil == 18 && (col == 8 || col == 17 || col == 19 || col == 27))
-				mapa[fil][col] = '#';
-
-			else
-				mapa[fil][col] = ' ';
-
-		}
+void accion(APersonaje& personaje, APersonaje& proyectil) {
+	//mueve proyectiles
+	//llama a recibir daño para verificar si en el frame se recibe daño o no
+	//limpia el personaje que tenga vida menor estricto a 1 (0 o menos)
+	if (proyectil.creado)
+		mover(proyectil, proyectil.direccion);
+	if (proyectil.creado)
+		recibirDmg(personaje, proyectil);
+	if (personaje.vida < 1) {
+		mapa[personaje.posY][personaje.posX] = ' ';
+		personaje.creado = false;
+		personaje.muertes++;
 	}
+}
+
+//Sistema
+void ClearScreen()
+{
+	//coloca el cursor de la consola en la posicion 0,0; arriba a la izquierda.
+	//sirve para "limpiar" la pantalla
+	//Elimina el flickering que hacia system("cls")
+	COORD cursorPosition;
+	cursorPosition.X = 0;
+	cursorPosition.Y = 0;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 void mostrarMapa() {
 	for (int fil = 0; fil < filas; fil++) {
@@ -455,6 +408,122 @@ void mostrarMapa() {
 		}
 		cout << endl;
 	}
+}
+void mostrarClasificaciones()
+{
+	system("cls");
+	cout << " ----> CLASIFICACIONES <----\n\n";
+	cout << setw(17) << " Posicion |" << setw(17) << " Jugador |" << setw(17) << " Puntaje " << endl;
+	for (int i = 0; i < 10; i++)
+		cout << setw(15) << i + 1 << " |" << setw(15) << jugadores[i] << " |" << setw(15) << puntajes[i] << endl;
+	cout << endl;
+	cout << " <---Volver al menu\n";
+	system("pause");
+}
+void OrdClasificaciones()
+{
+	int auxPts = 0;
+	string auxUser = "";
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 9; j++) {
+			if (puntajes[j] < puntajes[i]) {
+				//ordenar puntajes
+				auxPts = puntajes[i];
+				puntajes[i] = puntajes[j];
+				puntajes[j] = auxPts;
+				//ordenar jugadores
+				auxUser = jugadores[i];
+				jugadores[i] = jugadores[j];
+				jugadores[j] = auxUser;
+			}
+		}
+	}
+}
+void addClasificacion(APersonaje player)
+{
+	bool aniadida = false;
+	int AuxPunt[10], auxPos;
+	string AuxNomb[10];
+	for (int i = 0; i < 10; i++) {
+		if (aniadida) {
+			puntajes[i] = AuxPunt[i - auxPos];
+			jugadores[i] = AuxNomb[i - auxPos];
+		}
+		if (!aniadida && player.puntaje > puntajes[i]) {
+			for (int j = 0; j < 10 - i; j++) {
+				AuxPunt[j] = puntajes[i + j];
+				AuxNomb[j] = jugadores[i + j];
+			}
+			puntajes[i] = player.puntaje;
+			jugadores[i] = player.nombre;
+			aniadida = true;
+			auxPos = i + 1;
+		}
+	}
+}
+
+//Modo de juego
+void jugar() {
+	crearMapa();
+	addJugador(jugador);
+	addJugador(enemigo);
+	char visual;
+	bool inGame = true;
+	do {
+		//Respawnea al personaje que corresponda
+		Respawn(jugador);
+		Respawn(enemigo);
+		//Reinicia la pantalla
+		ClearScreen();
+		//Deteccion de teclas del teclado
+		if (_kbhit()) {
+			char direccion = _getch();//obtiene la tecla.
+			switch (toupper(direccion)) {//llama a la accion segun la tecla.
+			case 'W'://llama al movimiento del jugador
+			case 'A':
+			case 'S':
+			case 'D':
+				mover(jugador, direccion);
+				break;
+			case '8'://llama a la movimiento del enemigo
+			case '5':
+			case '4':
+			case '6':
+				mover(enemigo, direccion);
+				break;
+			case 'C'://llama a disparar del jugador
+				disparar(jugador, bala, jugador.direccion);
+				addJugador(bala);
+				break;
+			case '0'://llama disparar del enemigo
+				disparar(enemigo, bala1, enemigo.direccion);
+				addJugador(bala1);
+				break;
+			case 'P':
+				inGame = MenuPausa();
+				continue;
+				break;
+			}
+		}
+		accion(jugador, bala1);
+		accion(enemigo, bala);
+		sumarPuntos(jugador, enemigo);
+		if (jugador.muertes >= 3 || enemigo.muertes >= 3)
+			inGame = false;
+		mostrarMapa();
+		cout << endl << " Vida " << enemigo.bando << ": " << enemigo.vida << " || Vida " << jugador.bando << ": " << jugador.vida << endl;
+		cout << "\n P: Pausar\n";
+		Sleep(65);
+	} while (inGame);
+	//maneja todo el juego
+	//movimiento, tiros, ganador, todo sale de aca
+}
+void sumarPuntos(APersonaje& player, APersonaje& enemy)
+{
+	if (player.vida < 1 && enemy.vida > 1)
+		enemy.puntaje += 17;
+	if (player.vida > 1 && enemy.vida < 1)
+		player.puntaje += 17;
 }
 void recibirDmg(APersonaje& personaje, APersonaje& proyectil) {
 	//recibe daño tiene problemas cuando la bala pasa por el costado, toma el daño igualmente.
