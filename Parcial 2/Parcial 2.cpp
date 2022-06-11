@@ -58,27 +58,39 @@ void recibirDmg(APersonaje& personaje, APersonaje& proyectil);
 //Programa
 int main()
 {
+	//Inicia la semilla para el random
 	srand(time(NULL));
+	//inicia los puntajes de la grilla de clasificaciones
 	initPuntajes();
+	//ordena los puntajes con los nombres
 	OrdClasificaciones();
+	//inicio del juego
 	cout << "\n\n --->COUNTER EN CONSOLA <---\n\n\n";
 	system("pause");
-	MenuInicio();
-	if (jugador1.dado == 1)
-		jugar(jugador1, jugador2);
-	else if (jugador2.dado == 1)
-		jugar(jugador2, jugador1);
-	
-	system("cls");
-	cout << "\n\nFin del Juego!\n";
-	mostrarStats(jugador1, jugador2);
-	system("pause");
-	cout << "\n\nLas puntuaciones pueden estar en el top 10!\n";
-	cout << "Veamos si alguno logro posicionarse...\n\n";
-	system("pause");
-	addClasificacion(jugador1);
-	addClasificacion(jugador2);
-	mostrarClasificaciones();
+	do {
+		//abre menu inicio
+		MenuInicio();
+		//mueve con WASD el jugador que le toca el dado = 1, es como el jugador 1, entonces inicia el juego con ese jugador en primer lugar
+		if (jugador1.dado == 1)
+			jugar(jugador1, jugador2);
+		else if (jugador2.dado == 1)
+			jugar(jugador2, jugador1);
+
+		//termina el juego y muestra las stats
+		system("cls");
+		cout << "\n-----> Fin del Juego! <-----\n\n";
+		mostrarStats(jugador1, jugador2);
+		system("pause");
+		cout << "\n\n Las puntuaciones pueden estar en el top 10!\n";
+		cout << " Veamos si alguno logro posicionarse...\n\n";
+		system("pause");
+		//añade las clasificaciones a la grilla
+		addClasificacion(jugador1);
+		addClasificacion(jugador2);
+		mostrarClasificaciones();
+
+	} while (true);
+	//termina el programa
 	return 0;
 }
 
