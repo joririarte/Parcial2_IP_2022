@@ -9,7 +9,7 @@ using namespace std;
 struct APersonaje {
 	string bando = " ", nombre="pichichu";
 	char repVisual = ' ', direccion = ' ';
-	int posX = 0, posY = 0, vida, puntaje, muertes=0;
+	int posX = 0, posY = 0, vida, puntaje, muertes=0,dado=2;
 	bool creado = false;
 };
 
@@ -18,7 +18,7 @@ const int filas = 21, columnas = 29;
 char mapa[filas][columnas];
 int puntajes[10];
 string jugadores[10] = { "noobmaster69","xXToretoXx","ApuNahasapee","santi.godoy","elChidoxD","Pipita123","Messi2022","[ARG]Rambo87","vegeta777","elKun9" };
-APersonaje jugador, enemigo, bala, bala1;//actores
+APersonaje jugador1, jugador2, bala, bala1;//actores
 
 //Funciones: DEFINICIONES
 //Menús
@@ -28,12 +28,13 @@ void Instrucciones();
 
 //Inicializaciones
 void crearMapa();
-void elegirBando();
+void elegirBando(APersonaje& jugador, APersonaje& enemigo);
 void crearActor(APersonaje& pers, string bando, char visual);
 void addJugador(APersonaje& personaje);
 void reiniciarActor(APersonaje& pers);
 void Respawn(APersonaje& personaje);
 void initPuntajes();
+string crearNombres();
 
 //Acciones
 void disparar(APersonaje personaje, APersonaje& proyectil, char direccion);
@@ -46,11 +47,13 @@ void mostrarMapa();
 void mostrarClasificaciones();
 void OrdClasificaciones();
 void addClasificacion(APersonaje player);
+void mostrarStats(APersonaje jugador, APersonaje enemigo);
 
 //Modo de Juego
-void jugar();
+void jugar(APersonaje& jugador, APersonaje& enemigo);
 void sumarPuntos(APersonaje& player, APersonaje& enemy);
 void recibirDmg(APersonaje& personaje, APersonaje& proyectil);
+
 
 //Programa
 int main()
@@ -58,10 +61,23 @@ int main()
 	srand(time(NULL));
 	initPuntajes();
 	OrdClasificaciones();
-
+	cout << "\n\n --->COUNTER EN CONSOLA <---\n\n\n";
+	system("pause");
 	MenuInicio();
-	jugar();
-	addClasificacion(jugador);
+	if (jugador1.dado == 1)
+		jugar(jugador1, jugador2);
+	else if (jugador2.dado == 1)
+		jugar(jugador2, jugador1);
+	
+	system("cls");
+	cout << "\n\nFin del Juego!\n";
+	mostrarStats(jugador1, jugador2);
+	system("pause");
+	cout << "\n\nLas puntuaciones pueden estar en el top 10!\n";
+	cout << "Veamos si alguno logro posicionarse...\n\n";
+	system("pause");
+	addClasificacion(jugador1);
+	addClasificacion(jugador2);
 	mostrarClasificaciones();
 	return 0;
 }
@@ -74,7 +90,7 @@ void MenuInicio()
 	bool loop = true;
 	do {
 		system("cls");
-		int opciones;
+		int opciones,dado;
 		cout << " ----> Counter en Consola <----\n\n";
 		cout << " Bienvenidos a Counter en Consola\n\n";
 		cout << "Ingresa un numero de opcion.\n\n";
@@ -87,7 +103,27 @@ void MenuInicio()
 		switch (opciones) {
 		case 1://Jugar
 			system("cls");
-			elegirBando();
+			cout << "-------> GAMERTAG <------\n\n";
+			cout << " Jugador 1 ";
+			jugador1.nombre = crearNombres();
+			cout << " \n Jugador 2 ";
+			jugador2.nombre = crearNombres();
+			cout << " \n\n Ahora un dado define quien elige el bando\n";
+			Sleep(1000);
+			//tirar dados para que jugador elige el bando
+			dado = rand() % 6 + 1;
+			if (dado >= 4) {
+				cout << " \n Elige " << jugador1.nombre<<endl<<endl;
+				system("pause");
+				elegirBando(jugador1, jugador2);
+				jugador1.dado = 1;
+			}
+			else {
+				cout << " \n Elige " << jugador2.nombre<<endl<<endl;
+				system("pause");
+				elegirBando(jugador2, jugador1);
+				jugador2.dado = 1;
+			}
 			loop = false;
 			break;
 		case 2://instrucciones
@@ -213,13 +249,13 @@ void crearMapa() {
 		}
 	}
 }
-void elegirBando() {
+void elegirBando(APersonaje& jugador, APersonaje& enemigo) {
 	int opciones;
 	char confirmacion;
 	do {
 		system("cls");
 		cout << " ----> ELEGIR BANDO <----\n\n";
-		cout << " Elige tu bando (ingresa 1 o 2):\n 1. Counter\n 2. Terrorist\n\n";
+		cout <<" Jugador: "<< jugador.nombre<<"\n\n Elige tu bando (ingresa 1 o 2):\n 1. Counter\n 2. Terrorist\n\n";
 		cout << " Opcion: ";
 		cin >> opciones;
 		if (opciones == 1) {
@@ -290,6 +326,14 @@ void initPuntajes()
 {
 	for (int i = 0; i < 10; i++)
 		puntajes[i] = rand() % 100 + 1;
+}
+string crearNombres()
+{
+	string nombre;
+	cout << "\n\n (Puedes usar letras [del alfabeto ingles] numeros y simbolos, todo junto sin espacios)\n";
+	cout << " Ingresa tu Alias: ";
+	cin >> nombre;
+	return nombre;
 }
 
 //Acciones
@@ -461,9 +505,17 @@ void addClasificacion(APersonaje player)
 		}
 	}
 }
+void mostrarStats(APersonaje jugador, APersonaje enemigo) {
+	cout << " ------> HUD <------" << endl;
+	cout << setw(15) << " JUGADOR | " << setw(15) << jugador.nombre << " | " << setw(15) << enemigo.nombre << endl;
+	cout << setw(15) << " BANDO | " << setw(15) << jugador.bando << " | " << setw(15) << enemigo.bando << endl;
+	cout << setw(15) << " VIDA | " << setw(15) << jugador.vida << " | " << setw(15) << enemigo.vida << endl;
+	cout << setw(15) << " MUERTES | " << setw(15) << jugador.muertes << " | " << setw(15) << enemigo.muertes << endl;
+	cout << setw(15) << " PUNTOS | " << setw(15) << jugador.puntaje << " | " << setw(15) << enemigo.puntaje << endl;
+}
 
 //Modo de juego
-void jugar() {
+void jugar(APersonaje& jugador, APersonaje& enemigo) {
 	crearMapa();
 	addJugador(jugador);
 	addJugador(enemigo);
@@ -511,7 +563,7 @@ void jugar() {
 		if (jugador.muertes >= 3 || enemigo.muertes >= 3)
 			inGame = false;
 		mostrarMapa();
-		cout << endl << " Vida " << enemigo.bando << ": " << enemigo.vida << " || Vida " << jugador.bando << ": " << jugador.vida << endl;
+		mostrarStats(jugador, enemigo);
 		cout << "\n P: Pausar\n";
 		Sleep(65);
 	} while (inGame);
@@ -520,10 +572,10 @@ void jugar() {
 }
 void sumarPuntos(APersonaje& player, APersonaje& enemy)
 {
-	if (player.vida < 1 && enemy.vida > 1)
-		enemy.puntaje += 17;
-	if (player.vida > 1 && enemy.vida < 1)
-		player.puntaje += 17;
+	if (player.vida < 1 && enemy.vida >= 1)
+		enemy.puntaje += 32;
+	if (player.vida >= 1 && enemy.vida < 1)
+		player.puntaje += 32;
 }
 void recibirDmg(APersonaje& personaje, APersonaje& proyectil) {
 	//recibe daño tiene problemas cuando la bala pasa por el costado, toma el daño igualmente.
