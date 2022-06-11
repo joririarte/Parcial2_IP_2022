@@ -114,6 +114,7 @@ void MenuInicio()
 		cin >> opciones;
 		switch (opciones) {
 		case 1://Jugar
+			//Eleccion de nombres, alias
 			system("cls");
 			cout << "-------> GAMERTAG <------\n\n";
 			cout << " Jugador 1 ";
@@ -124,6 +125,7 @@ void MenuInicio()
 			Sleep(1000);
 			//tirar dados para que jugador elige el bando
 			dado = rand() % 6 + 1;
+			//si el dado cae del 1 al 3 elige el jugador 2 y si cae del 4 al 6 el jugador 1
 			if (dado >= 4) {
 				cout << " \n Elige " << jugador1.nombre<<endl<<endl;
 				system("pause");
@@ -156,6 +158,9 @@ void MenuInicio()
 }
 bool MenuPausa()
 {
+	//muestra un menu de pausa durante el juego
+	//durante el juego se aprietea P para desplegar.
+	//se define como bool para tener un metodo para salir del juego actual y volver al menu principal
 	int opcion;
 	do {
 		system("cls");
@@ -169,14 +174,14 @@ bool MenuPausa()
 		cin >> opcion;
 		switch (opcion)
 		{
-		case 1:
+		case 1://vuelve al juego
 			return true;
 			break;
-		case 2:
+		case 2://despliega instrucciones
 			Instrucciones();
 			return true;
 			break;
-		case 3:
+		case 3://muestra la grilla de clasificaciones.
 			mostrarClasificaciones();
 			return true;
 			break;
@@ -275,10 +280,12 @@ void elegirBando(APersonaje& jugador, APersonaje& enemigo) {
 			cout << " Confirma tu eleccion apretando Y\n";
 			cout << " Si te equivocaste presiona cualquier otra letra: ";
 			cin >> confirmacion;
+			//toupper para garantizar que lo que se ingresa esta en mayusculas
+			//en codigo ASCII las mayusculas y minusculas son diferentes 'y' es diferente a 'Y'
 			if (toupper(confirmacion) == 'Y') {
 				crearActor(jugador, "Counter", 'C');
 				crearActor(enemigo, "Terrorist", 'T');
-				return;
+				return;//usa return para cortar el loop infinito
 			}
 		}
 		else if (opciones == 2) {
@@ -299,6 +306,7 @@ void elegirBando(APersonaje& jugador, APersonaje& enemigo) {
 	} while (true);
 }
 void crearActor(APersonaje& pers, string bando, char visual) {
+	//inicializa las variables principales del actor
 	pers.bando = bando;
 	pers.repVisual = visual;
 	pers.posX = 0;
@@ -323,12 +331,14 @@ void addJugador(APersonaje& personaje) {
 	} while (!exito);//repite el ciclo hasta que el personaje se pueda colocar en la pantalla.
 }
 void reiniciarActor(APersonaje& pers) {
+	//reinicia las variables de vida y creacion, sirve para el respawn
 	pers.creado = true;
 	pers.vida = 3;
 }
 void Respawn(APersonaje& personaje)
 {
 	//Respawnea el personaje si es que creado es false
+	//si creado es false, significa que el personaje esta muerto, por ende tiene sentido respawnearlo.
 	if (!personaje.creado) {
 		reiniciarActor(personaje);
 		addJugador(personaje);
@@ -336,11 +346,13 @@ void Respawn(APersonaje& personaje)
 }
 void initPuntajes()
 {
+	//inicia los puntajes en la grillla de clasificaciones con numeros random
 	for (int i = 0; i < 10; i++)
 		puntajes[i] = rand() % 100 + 1;
 }
 string crearNombres()
 {
+	//funcion para crear el nombre del jugador
 	string nombre;
 	cout << "\n\n (Puedes usar letras [del alfabeto ingles] numeros y simbolos, todo junto sin espacios)\n";
 	cout << " Ingresa tu Alias: ";
@@ -357,21 +369,21 @@ void disparar(APersonaje personaje, APersonaje& proyectil, char direccion) {
 	proyectil.direccion = direccion;
 	proyectil.creado = true;
 	switch (direccion) {
-	case 'w':
+	case 'w'://hacia arriba
 		proyectil.posX = personaje.posX;
 		proyectil.posY = personaje.posY - 1;
 		proyectil.repVisual = '|';
 		break;
-	case 's':
+	case 's'://acia abajo
 		proyectil.posX = personaje.posX;
 		proyectil.posY = personaje.posY + 1;
 		proyectil.repVisual = '|';
 		break;
-	case 'a':
+	case 'a'://hacia la izquierda
 		proyectil.posX = personaje.posX - 1;
 		proyectil.posY = personaje.posY;
 		break;
-	case 'd':
+	case 'd'://hacia la derecha
 		proyectil.posX = personaje.posX + 1;
 		proyectil.posY = personaje.posY;
 		break;
@@ -383,7 +395,7 @@ void mover(APersonaje& personaje, char dir) {
 	int x = personaje.posX;//toma las posiciones iniciales del personaje
 	int y = personaje.posY;
 	switch (dir) {
-	case 'W':
+	case 'W'://mover arriba
 	case'w':
 	case'8':
 		if (mapa[personaje.posY - 1][personaje.posX] == ' ') {
@@ -393,7 +405,7 @@ void mover(APersonaje& personaje, char dir) {
 		}
 		personaje.direccion = 'w';
 		break;
-	case 'S':
+	case 'S'://mover abajo
 	case's':
 	case'5':
 		if (mapa[personaje.posY + 1][personaje.posX] == ' ') {
@@ -403,7 +415,7 @@ void mover(APersonaje& personaje, char dir) {
 		}
 		personaje.direccion = 's';
 		break;
-	case 'A':
+	case 'A'://mover a la izquierda
 	case'a':
 	case'4':
 		if (mapa[personaje.posY][personaje.posX - 1] == ' ') {
@@ -413,7 +425,7 @@ void mover(APersonaje& personaje, char dir) {
 		}
 		personaje.direccion = 'a';
 		break;
-	case 'D':
+	case 'D'://mover a la derecha
 	case'd':
 	case'6':
 		if (mapa[personaje.posY][personaje.posX + 1] == ' ') {
@@ -458,6 +470,7 @@ void ClearScreen()
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 void mostrarMapa() {
+	//imprime el mapa en pantalla
 	for (int fil = 0; fil < filas; fil++) {
 		for (int col = 0; col < columnas; col++) {
 			cout << mapa[fil][col] << "  ";
@@ -467,6 +480,9 @@ void mostrarMapa() {
 }
 void mostrarClasificaciones()
 {
+	//muestra las clasificaciones
+	//setw es una funcion que permite ordenar la salida para que se vea como columnas ordenadas.
+	//indica cuantos caracteres se van a usar para la siguiente salida (lo que está después del <<)
 	system("cls");
 	cout << " ----> CLASIFICACIONES <----\n\n";
 	cout << setw(17) << " Posicion |" << setw(17) << " Jugador |" << setw(17) << " Puntaje " << endl;
@@ -478,6 +494,8 @@ void mostrarClasificaciones()
 }
 void OrdClasificaciones()
 {
+	//algoritmo para ordenar las clasificaciones
+	//el criterio elegido son los puntajes de mayor a menor
 	int auxPts = 0;
 	string auxUser = "";
 	for (int i = 0; i < 10; i++) {
@@ -497,37 +515,49 @@ void OrdClasificaciones()
 }
 void addClasificacion(APersonaje player)
 {
+	//añade una puntuacion a la grilla de puntajes
+	//la añade en la posicion que corresponda segun el puntaje (comparando de mayor a menor)
+	//desplaza los puntajes restantes una posicion hacia abajo, y descarta el sobrante.
 	bool aniadida = false;
 	int AuxPunt[10], auxPos;
 	string AuxNomb[10];
 	for (int i = 0; i < 10; i++) {
 		if (aniadida) {
+			//cuando ya se ha añadido una clasificacion desplaza las clasificaciones una posición hacia abajo.
 			puntajes[i] = AuxPunt[i - auxPos];
 			jugadores[i] = AuxNomb[i - auxPos];
 		}
 		if (!aniadida && player.puntaje > puntajes[i]) {
+			//solo si no hay una clasificacion añadida se hace el backup de las posiciones restantes
+			//y se añade la clasificacion en el lugar que corresponda segun la segunda clausula del if de arriba.
+			//de mayor a menor
 			for (int j = 0; j < 10 - i; j++) {
 				AuxPunt[j] = puntajes[i + j];
 				AuxNomb[j] = jugadores[i + j];
 			}
 			puntajes[i] = player.puntaje;
 			jugadores[i] = player.nombre;
-			aniadida = true;
+			aniadida = true;//avisa de que ya se añadió una clasificación
 			auxPos = i + 1;
+			//la posición donde se añade la clasificación +1
+			//sirve para dar con los indices correctos del vector aux
 		}
 	}
 }
 void mostrarStats(APersonaje jugador, APersonaje enemigo) {
-	cout << " ------> HUD <------" << endl;
+	//muestra las estadisticas del juego
+	cout << "\n\n ------> HUD <------" << endl;
 	cout << setw(15) << " JUGADOR | " << setw(15) << jugador.nombre << " | " << setw(15) << enemigo.nombre << endl;
 	cout << setw(15) << " BANDO | " << setw(15) << jugador.bando << " | " << setw(15) << enemigo.bando << endl;
 	cout << setw(15) << " VIDA | " << setw(15) << jugador.vida << " | " << setw(15) << enemigo.vida << endl;
 	cout << setw(15) << " MUERTES | " << setw(15) << jugador.muertes << " | " << setw(15) << enemigo.muertes << endl;
-	cout << setw(15) << " PUNTOS | " << setw(15) << jugador.puntaje << " | " << setw(15) << enemigo.puntaje << endl;
+	cout << setw(15) << " PUNTOS | " << setw(15) << jugador.puntaje << " | " << setw(15) << enemigo.puntaje << endl<<endl;
 }
 
 //Modo de juego
 void jugar(APersonaje& jugador, APersonaje& enemigo) {
+	//es el desarrollo del juego
+	//inicia creando el mapa y añadiendo los jugadores al mapa
 	crearMapa();
 	addJugador(jugador);
 	addJugador(enemigo);
@@ -549,7 +579,7 @@ void jugar(APersonaje& jugador, APersonaje& enemigo) {
 			case 'D':
 				mover(jugador, direccion);
 				break;
-			case '8'://llama a la movimiento del enemigo
+			case '8'://llama al movimiento del enemigo
 			case '5':
 			case '4':
 			case '6':
@@ -563,20 +593,26 @@ void jugar(APersonaje& jugador, APersonaje& enemigo) {
 				disparar(enemigo, bala1, enemigo.direccion);
 				addJugador(bala1);
 				break;
-			case 'P':
+			case 'P'://toma la tecla P para poner en pausa
+				//para esto menu pausa es bool, para cortar el juego si se desea salir de el en cualquier momento
 				inGame = MenuPausa();
 				continue;
 				break;
 			}
 		}
+		//actualiza lo que pasa en cada frame, para cada jugador
 		accion(jugador, bala1);
 		accion(enemigo, bala);
 		sumarPuntos(jugador, enemigo);
+		//chequea las muertes, si algun jugador tiene muertes mayores o iguales a 3 el juego se acaba
 		if (jugador.muertes >= 3 || enemigo.muertes >= 3)
 			inGame = false;
+		//muestra el mapa en cada frame
 		mostrarMapa();
-		mostrarStats(jugador, enemigo);
+		//muestra la ayuda para desplegar el menu pausa
 		cout << "\n P: Pausar\n";
+		//muestra las estadisticas en cada frame
+		mostrarStats(jugador, enemigo);
 		Sleep(65);
 	} while (inGame);
 	//maneja todo el juego
@@ -584,6 +620,7 @@ void jugar(APersonaje& jugador, APersonaje& enemigo) {
 }
 void sumarPuntos(APersonaje& player, APersonaje& enemy)
 {
+	//suma puntos a un jugador si se cumple que uno esta vivo y el otro muerto
 	if (player.vida < 1 && enemy.vida >= 1)
 		enemy.puntaje += 32;
 	if (player.vida >= 1 && enemy.vida < 1)
@@ -592,15 +629,15 @@ void sumarPuntos(APersonaje& player, APersonaje& enemy)
 void recibirDmg(APersonaje& personaje, APersonaje& proyectil) {
 	//recibe daño tiene problemas cuando la bala pasa por el costado, toma el daño igualmente.
 	switch (proyectil.direccion) {
-	case 'w':
+	case 'w'://direccion de la bala: caso vertical
 	case 's':
-		if (personaje.posX == proyectil.posX)
+		if (personaje.posX == proyectil.posX)//para la misma posicion X la bala solo puede pegar de arriba o abajo
 			if (personaje.posY == proyectil.posY - 1 || personaje.posY == proyectil.posY + 1)
 				personaje.vida--;
 		break;
-	case 'a':
+	case 'a'://direccion de la bala caso horizontal
 	case 'd':
-		if (personaje.posY == proyectil.posY)
+		if (personaje.posY == proyectil.posY)//para la misma posicion Y la bala solo puede pegar de la izquierda o la derecha
 			if (personaje.posX == proyectil.posX - 1 || personaje.posX == proyectil.posX + 1 && bala.direccion)
 				personaje.vida--;
 		break;
