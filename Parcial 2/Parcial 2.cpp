@@ -561,7 +561,6 @@ void jugar(APersonaje& jugador, APersonaje& enemigo) {
 	crearMapa();
 	addJugador(jugador);
 	addJugador(enemigo);
-	char visual;
 	bool inGame = true;
 	do {
 		//Respawnea al personaje que corresponda
