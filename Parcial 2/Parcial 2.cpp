@@ -572,7 +572,6 @@ void mostrarStats(APersonaje jugador, APersonaje enemigo) {
 	cout << setw(15) << " MUERTES | " << setw(15) << jugador.muertes << " | " << setw(15) << enemigo.muertes << endl;
 	cout << setw(15) << " PUNTOS | " << setw(15) << jugador.puntaje << " | " << setw(15) << enemigo.puntaje << endl<<endl;
 }
-
 void MostrarIconoCounter()
 {
 	for (int fil = 0; fil < filas; fil++) {
@@ -625,7 +624,6 @@ void MostrarIconoCounter()
 	}
 		
 }
-
 void MostrarIconoTerrorist()
 {
 	for (int fil = 0; fil < filas; fil++) {
@@ -676,7 +674,6 @@ void MostrarIconoTerrorist()
 	}
 
 }
-
 void MostrarIconoInicio()
 {
 	for (int fil = 0; fil < filas; fil++) {
