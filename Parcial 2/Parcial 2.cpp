@@ -31,7 +31,6 @@ void crearMapa();
 void elegirBando(APersonaje& jugador, APersonaje& enemigo);
 void crearActor(APersonaje& pers, string bando, char visual);
 void addJugador(APersonaje& personaje);
-void reiniciarActor(APersonaje& pers);
 void Respawn(APersonaje& personaje);
 void initPuntajes();
 string crearNombres();
@@ -259,7 +258,6 @@ void crearMapa() {
 				mapa[fil][col] = '#';
 			else if (fil == 18 && (col == 8 || col == 17 || col == 19 || col == 27))
 				mapa[fil][col] = '#';
-
 			else
 				mapa[fil][col] = ' ';
 
@@ -330,17 +328,13 @@ void addJugador(APersonaje& personaje) {
 			exito = true;
 	} while (!exito);//repite el ciclo hasta que el personaje se pueda colocar en la pantalla.
 }
-void reiniciarActor(APersonaje& pers) {
-	//reinicia las variables de vida y creacion, sirve para el respawn
-	pers.creado = true;
-	pers.vida = 3;
-}
 void Respawn(APersonaje& personaje)
 {
 	//Respawnea el personaje si es que creado es false
 	//si creado es false, significa que el personaje esta muerto, por ende tiene sentido respawnearlo.
 	if (!personaje.creado) {
-		reiniciarActor(personaje);
+		pers.creado = true;
+		pers.vida = 3;
 		addJugador(personaje);
 	}
 }
