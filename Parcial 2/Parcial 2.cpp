@@ -573,7 +573,7 @@ void mostrarStats(APersonaje jugador, APersonaje enemigo) {
 	cout << setw(15) << " PUNTOS | " << setw(15) << jugador.puntaje << " | " << setw(15) << enemigo.puntaje << endl<<endl;
 }
 void MostrarIconoCounter()
-{
+{	//Crea y muestra el icono de counter en la pantalla
 	for (int fil = 0; fil < filas; fil++) {
 		for (int col = 0; col < columnas; col++) {
 			if (fil == 0 || col == 0 || fil == filas - 1 || col == columnas - 1)
@@ -626,6 +626,7 @@ void MostrarIconoCounter()
 }
 void MostrarIconoTerrorist()
 {
+	//Crea y muestra el icono de terrorist en la pantalla
 	for (int fil = 0; fil < filas; fil++) {
 		for (int col = 0; col < columnas; col++) {
 			if (fil == 0 || col == 0 || fil == filas - 1 || col == columnas - 1)
@@ -676,6 +677,7 @@ void MostrarIconoTerrorist()
 }
 void MostrarIconoInicio()
 {
+	//Crea y muestra el icono de inicio
 	for (int fil = 0; fil < filas; fil++) {
 		for (int col = 0; col < columnas; col++) {
 			if (fil == 0 || col == 0 || fil == filas - 1 || col == columnas - 1)
