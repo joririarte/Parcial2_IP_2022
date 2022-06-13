@@ -333,8 +333,8 @@ void Respawn(APersonaje& personaje)
 	//Respawnea el personaje si es que creado es false
 	//si creado es false, significa que el personaje esta muerto, por ende tiene sentido respawnearlo.
 	if (!personaje.creado) {
-		pers.creado = true;
-		pers.vida = 3;
+		personaje.creado = true;
+		personaje.vida = 3;
 		addJugador(personaje);
 	}
 }
