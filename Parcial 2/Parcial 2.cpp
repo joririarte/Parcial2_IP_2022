@@ -465,8 +465,16 @@ void ClearScreen()
 }
 void mostrarMapa() {
 	//imprime el mapa en pantalla
+	HANDLE console_color;
+	console_color = GetStdHandle(STD_OUTPUT_HANDLE);
 	for (int fil = 0; fil < filas; fil++) {
 		for (int col = 0; col < columnas; col++) {
+			if (mapa[fil][col] == 'C')
+				SetConsoleTextAttribute(console_color, 9);
+			else if (mapa[fil][col] == 'T')
+				SetConsoleTextAttribute(console_color, 12);
+			else
+				SetConsoleTextAttribute(console_color, 7);
 			cout << mapa[fil][col] << "  ";
 		}
 		cout << endl;
@@ -477,11 +485,20 @@ void mostrarClasificaciones()
 	//muestra las clasificaciones
 	//setw es una funcion que permite ordenar la salida para que se vea como columnas ordenadas.
 	//indica cuantos caracteres se van a usar para la siguiente salida (lo que está después del <<)
+	HANDLE console_color;
+	console_color = GetStdHandle(STD_OUTPUT_HANDLE);
 	system("cls");
 	cout << " ----> CLASIFICACIONES <----\n\n";
 	cout << setw(17) << " Posicion |" << setw(17) << " Jugador |" << setw(17) << " Puntaje " << endl;
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++) {
+		if (jugadores[i] == jugador1.nombre || jugadores[i] == jugador2.nombre) {
+			SetConsoleTextAttribute(console_color, 14);
+		}
+		else
+			SetConsoleTextAttribute(console_color, 7);
+
 		cout << setw(15) << i + 1 << " |" << setw(15) << jugadores[i] << " |" << setw(15) << puntajes[i] << endl;
+	}
 	cout << endl;
 	cout << " <---Volver al menu\n";
 	system("pause");
