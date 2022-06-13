@@ -311,6 +311,8 @@ void crearActor(APersonaje& pers, string bando, char visual) {
 	pers.posY = 0;
 	pers.creado = true;
 	pers.vida = 3;
+	pers.muertes = 0;
+	pers.puntaje = 0;
 }
 void addJugador(APersonaje& personaje) {
 	//añade un jugador al mapa
