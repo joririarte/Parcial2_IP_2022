@@ -47,6 +47,9 @@ void mostrarClasificaciones();
 void OrdClasificaciones();
 void addClasificacion(APersonaje player);
 void mostrarStats(APersonaje jugador, APersonaje enemigo);
+void MostrarIconoInicio();
+void MostrarIconoCounter();
+void MostrarIconoTerrorist();
 
 //Modo de Juego
 void jugar(APersonaje& jugador, APersonaje& enemigo);
@@ -65,6 +68,7 @@ int main()
 	OrdClasificaciones();
 	//inicio del juego
 	cout << "\n\n --->COUNTER EN CONSOLA <---\n\n\n";
+	MostrarIconoInicio();
 	system("pause");
 	do {
 		//abre menu inicio
@@ -274,7 +278,8 @@ void elegirBando(APersonaje& jugador, APersonaje& enemigo) {
 		cout << " Opcion: ";
 		cin >> opciones;
 		if (opciones == 1) {
-			cout << " Elegiste: Counter\n\n";
+			MostrarIconoCounter();
+			cout << "\n\n Elegiste: Counter\n\n";
 			cout << " Confirma tu eleccion apretando Y\n";
 			cout << " Si te equivocaste presiona cualquier otra letra: ";
 			cin >> confirmacion;
@@ -287,6 +292,7 @@ void elegirBando(APersonaje& jugador, APersonaje& enemigo) {
 			}
 		}
 		else if (opciones == 2) {
+			MostrarIconoTerrorist();
 			cout << " Elegiste: Terrorist\n\n";
 			cout << " Confirma tu eleccion apretando Y\n";
 			cout << " Si te equivocaste presiona cualquier otra letra: ";
@@ -472,11 +478,11 @@ void mostrarMapa() {
 	for (int fil = 0; fil < filas; fil++) {
 		for (int col = 0; col < columnas; col++) {
 			if (mapa[fil][col] == 'C')
-				SetConsoleTextAttribute(console_color, 9);
+				SetConsoleTextAttribute(console_color, 9);//pinta en azul
 			else if (mapa[fil][col] == 'T')
-				SetConsoleTextAttribute(console_color, 12);
+				SetConsoleTextAttribute(console_color, 12);//pinta en rojo
 			else
-				SetConsoleTextAttribute(console_color, 7);
+				SetConsoleTextAttribute(console_color, 7);//pinta en blanco
 			cout << mapa[fil][col] << "  ";
 		}
 		cout << endl;
@@ -494,10 +500,10 @@ void mostrarClasificaciones()
 	cout << setw(17) << " Posicion |" << setw(17) << " Jugador |" << setw(17) << " Puntaje " << endl;
 	for (int i = 0; i < 10; i++) {
 		if (jugadores[i] == jugador1.nombre || jugadores[i] == jugador2.nombre) {
-			SetConsoleTextAttribute(console_color, 14);
+			SetConsoleTextAttribute(console_color, 14);//Pinta en amarillo la fila
 		}
 		else
-			SetConsoleTextAttribute(console_color, 7);
+			SetConsoleTextAttribute(console_color, 7);//pinta en blanco
 
 		cout << setw(15) << i + 1 << " |" << setw(15) << jugadores[i] << " |" << setw(15) << puntajes[i] << endl;
 	}
@@ -565,6 +571,163 @@ void mostrarStats(APersonaje jugador, APersonaje enemigo) {
 	cout << setw(15) << " VIDA | " << setw(15) << jugador.vida << " | " << setw(15) << enemigo.vida << endl;
 	cout << setw(15) << " MUERTES | " << setw(15) << jugador.muertes << " | " << setw(15) << enemigo.muertes << endl;
 	cout << setw(15) << " PUNTOS | " << setw(15) << jugador.puntaje << " | " << setw(15) << enemigo.puntaje << endl<<endl;
+}
+
+void MostrarIconoCounter()
+{
+	for (int fil = 0; fil < filas; fil++) {
+		for (int col = 0; col < columnas; col++) {
+			if (fil == 0 || col == 0 || fil == filas - 1 || col == columnas - 1)
+				mapa[fil][col] = '#';
+			else if (fil == 1 && (col == 5 || col == 6))
+				mapa[fil][col] = '#';
+			else if (fil == 2 && (col == 4 || col == 7))
+				mapa[fil][col] = '#';
+			else if (fil == 3 && (col == 3 || col == 8))
+				mapa[fil][col] = '#';
+			else if (fil == 4 && (col == 2 || col == 9))
+				mapa[fil][col] = '#';
+			else if (fil == 5 && (col == 2 || col == 9 || col > 3 && col < 8))
+				mapa[fil][col] = '#';
+			else if (fil == 6 && (col == 2 || col == 9 || col == 4 || col == 7))
+				mapa[fil][col] = '#';
+			else if (fil == 7 && (col == 2 || col == 9 || col > 3 && col < 8))
+				mapa[fil][col] = '#';
+			else if (fil == 8 && (col == 3 || col == 8 || col == 13 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 9 && (col == 4 || col == 7 || col == 12))
+				mapa[fil][col] = '#';
+			else if (fil == 10 && (col == 5 || col == 6 || col == 12))
+				mapa[fil][col] = '#';
+			else if (fil == 11 && (col == 5 || col == 6 || col == 12))
+				mapa[fil][col] = '#';
+			else if (fil == 12 && (col > 1 && col < 10 || col == 12))
+				mapa[fil][col] = '#';
+			else if (fil == 12 && (col > 1 && col < 10 || col == 12))
+				mapa[fil][col] = '#';
+			else if (fil == 13 && (col > 1 && col < 10 || col == 12))
+				mapa[fil][col] = '#';
+			else if (fil == 14 && (col > 1 && col < 10 || col == 13 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 15 && (col > 1 && col < 10))
+				mapa[fil][col] = '#';
+			else if (fil == 16 && (col == 2 || col == 3 || col == 8 || col == 9))
+				mapa[fil][col] = '#';
+			else if (fil == 17 && (col == 2 || col == 3 || col == 8 || col == 9))
+				mapa[fil][col] = '#';
+			else
+				mapa[fil][col] = ' ';
+
+			cout << mapa[fil][col] << " ";
+
+		}
+		cout << endl;
+	}
+		
+}
+
+void MostrarIconoTerrorist()
+{
+	for (int fil = 0; fil < filas; fil++) {
+		for (int col = 0; col < columnas; col++) {
+			if (fil == 0 || col == 0 || fil == filas - 1 || col == columnas - 1)
+				mapa[fil][col] = '#';
+			else if (fil == 1 && (col == 5 || col == 6))
+				mapa[fil][col] = '#';
+			else if (fil == 2 && (col == 4 || col == 7))
+				mapa[fil][col] = '#';
+			else if (fil == 3 && (col == 3 || col == 8))
+				mapa[fil][col] = '#';
+			else if (fil == 4 && (col == 2 || col == 9))
+				mapa[fil][col] = '#';
+			else if (fil == 5 && (col == 2 || col == 9 || col > 3 && col < 8))
+				mapa[fil][col] = '#';
+			else if (fil == 6 && (col == 2 || col == 9 || col == 4 || col == 7))
+				mapa[fil][col] = '#';
+			else if (fil == 7 && (col == 2 || col == 9 || col > 3 && col < 8))
+				mapa[fil][col] = '#';
+			else if (fil == 8 && (col == 3 || col == 8 || col == 13 || col == 14 || col == 15))
+				mapa[fil][col] = '#';
+			else if (fil == 9 && (col == 4 || col == 7 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 10 && (col == 5 || col == 6 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 11 && (col == 5 || col == 6 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 12 && (col > 1 && col < 10 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 12 && (col > 1 && col < 10 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 13 && (col > 1 && col < 10 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 14 && (col > 1 && col < 10 || col == 14))
+				mapa[fil][col] = '#';
+			else if (fil == 15 && (col > 1 && col < 10))
+				mapa[fil][col] = '#';
+			else if (fil == 16 && (col == 2 || col == 3 || col == 8 || col == 9))
+				mapa[fil][col] = '#';
+			else if (fil == 17 && (col == 2 || col == 3 || col == 8 || col == 9))
+				mapa[fil][col] = '#';
+			else 
+				mapa[fil][col] = ' ';
+			cout << mapa[fil][col] << " ";
+		}
+		cout << endl;
+	}
+
+}
+
+void MostrarIconoInicio()
+{
+	for (int fil = 0; fil < filas; fil++) {
+		for (int col = 0; col < columnas; col++) {
+			if (fil == 0 || col == 0 || fil == filas - 1 || col == columnas - 1)
+				mapa[fil][col] = '#';
+			else if (fil == 2 && (col == 5 || col == 6))
+				mapa[fil][col] = '#';
+			else if (fil == 3 && (col > 3 && col < 8))
+				mapa[fil][col] = '#';
+			else if (fil == 4 && (col == 9 || col > 3 && col < 8))
+				mapa[fil][col] = '#';
+			else if (fil == 5 && (col == 15 || col > 2 && col < 9))
+				mapa[fil][col] = '#';
+			else if (fil == 6 && (col > 1 && col < 17))
+				mapa[fil][col] = '#';
+			else if (fil == 7 && (col > 1 && col < 14 || col == 15))
+				mapa[fil][col] = '#';
+			else if (fil == 8 && (col > 0 && col < 11 || col == 12))
+				mapa[fil][col] = '#';
+			else if (fil == 9 && (col > 0 && col < 13))
+				mapa[fil][col] = '#';
+			else if (fil == 10 && (col > 1 && col < 13))
+				mapa[fil][col] = '#';
+			else if (fil == 11 && (col > 0 && col < 9 || col == 10 || col == 11))
+				mapa[fil][col] = '#';
+			else if (fil == 12 && (col > 0 && col < 10))
+				mapa[fil][col] = '#';
+			else if (fil == 13 && (col > 2 && col < 10))
+				mapa[fil][col] = '#';
+			else if (fil == 14 && (col > 2 && col < 6 || col == 7 || col == 8 || col == 9))
+				mapa[fil][col] = '#';
+			else if (fil == 15 && (col > 2 && col < 6 || col == 9 || col == 10 || col == 11))
+				mapa[fil][col] = '#';
+			else if (fil == 16 && (col > 2 && col < 6 || col == 9 || col == 10 || col == 11))
+				mapa[fil][col] = '#';
+			else if (fil == 17 && (col > 1 && col < 4 || col == 10 || col == 11))
+				mapa[fil][col] = '#';
+			else if (fil == 18 && (col > 1 && col < 4 || col == 10 || col == 11))
+				mapa[fil][col] = '#';
+			else if (fil == 19 && (col > 0 && col < 5 || col == 10 || col == 11))
+				mapa[fil][col] = '#';
+			else if (fil == 20 && (col > 0 && col < 6 || col == 9 || col == 10 || col == 11 || col == 13))
+				mapa[fil][col] = '#';
+			else
+				mapa[fil][col] = ' ';
+
+			cout << mapa[fil][col]<<" ";
+		}
+		cout << endl;
+	}
 }
 
 //Modo de juego
