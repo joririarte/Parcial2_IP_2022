@@ -457,6 +457,8 @@ void accion(APersonaje& personaje, APersonaje& proyectil) {
 		mapa[personaje.posY][personaje.posX] = ' ';
 		personaje.creado = false;
 		personaje.muertes++;
+		if((personaje.puntaje-17)>0)
+			personaje.puntaje -= 17;
 	}
 }
 
@@ -507,6 +509,7 @@ void mostrarClasificaciones()
 
 		cout << setw(15) << i + 1 << " |" << setw(15) << jugadores[i] << " |" << setw(15) << puntajes[i] << endl;
 	}
+	SetConsoleTextAttribute(console_color, 7);//pinta en blanco
 	cout << endl;
 	cout << " <---Volver al menu\n";
 	system("pause");
